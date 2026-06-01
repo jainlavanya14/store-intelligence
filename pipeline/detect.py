@@ -10,9 +10,9 @@ from ultralytics import YOLO
 import supervision as sv
 
 # ── Config ────────────────────────────────────────────────────────────────────
-DRIVE_BASE   = "/content/drive/MyDrive/purplle"
+DRIVE_BASE   = "/content/drive/MyDrive/purplle/clips/CCTV Footage"
 OUTPUT_DIR   = "/content/store-intelligence/data"
-STORE_ID     = "STORE_BLR_002"
+STORE_ID     = "STORE_BLR_001"
 MODEL_PATH   = "yolov8n.pt"          # downloads automatically
 CONF_THRESH  = 0.35
 FRAME_SKIP   = 3                     # process every 3rd frame (speeds up 3x)
@@ -99,7 +99,8 @@ def process_video(video_path: str, camera_type: str, clip_start_time: datetime):
         frame_h, frame_w = frame.shape[:2]
         ENTRY_LINE_Y = frame_h * 0.5   # horizontal line at midpoint
         
-        for i, track_id in enumerate(dets.tracker_id or []):
+        tracker_ids = dets.tracker_id if dets.tracker_id is not None else []
+        for i, track_id in enumerate(tracker_ids):
             if track_id is None:
                 continue
             
@@ -171,7 +172,7 @@ def process_video(video_path: str, camera_type: str, clip_start_time: datetime):
                     emit("BILLING_QUEUE_JOIN", extra_meta={"queue_depth": billing_count})
         
         # Emit ZONE_EXIT for tracks that disappeared
-        active_ids = set(dets.tracker_id or [])
+        active_ids = set(dets.tracker_id) if dets.tracker_id is not None else set()
         for track_id, enter_ts in list(zone_enter_ts.items()):
             if track_id not in active_ids and camera_type in ("floor", "billing"):
                 vid      = visitor_map.get(track_id, f"VIS_{track_id}")
@@ -195,11 +196,11 @@ def process_video(video_path: str, camera_type: str, clip_start_time: datetime):
 if __name__ == "__main__":
     import glob
     
-    videos = glob.glob(f"{DRIVE_BASE}/**/*.mp4", recursive=True)
+    videos = glob.glob(f"{DRIVE_BASE}/*.mp4")
     print(f"Found {len(videos)} videos")
     
     all_events = []
-    clip_start = datetime(2026, 3, 3, 10, 0, 0)   # assume store opens 10am
+    clip_start = datetime(2026, 4, 10, 10, 0, 0)   # assume store opens 10am
     
     for video_path in videos:
         name = Path(video_path).stem.lower()
