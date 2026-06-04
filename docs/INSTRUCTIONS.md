@@ -57,7 +57,23 @@ curl http://localhost:8000/stores/store_1076/metrics
 
 > Replace `store_1076` with the store ID used by your dataset or environment (for example, `STORE_BLR_002` if that is configured by your store mapping).
 
-## 6. Alternative local run (without Docker)
+## 6. Run the Streamlit dashboard
+
+Install Streamlit if needed:
+
+```powershell
+py -3.11 -m pip install streamlit
+```
+
+Then run:
+
+```powershell
+py -3.11 -m streamlit run streamlit_dashboard.py
+```
+
+Open the browser page shown by Streamlit to view metrics, funnel, heatmap, anomalies, and health.
+
+## 7. Alternative local run (without Docker)
 
 If Docker is unavailable, install Python dependencies and start the app directly:
 
