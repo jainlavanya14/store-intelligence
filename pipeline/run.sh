@@ -1,17 +1,29 @@
 #!/bin/bash
-# Run this on Colab or any machine with GPU
-# Usage: bash run.sh
+# run.sh — Process all CCTV clips and emit events to data/events.jsonl
+# Usage: bash pipeline/run.sh
+# Requirements: pip install ultralytics supervision opencv-python-headless
 
 set -e
 
-echo "Installing dependencies..."
-pip install ultralytics supervision scikit-learn opencv-python-headless pandas -q
+echo "=== Store Intelligence Detection Pipeline ==="
+echo "Starting at $(date)"
 
-echo "Running detection pipeline..."
-python pipeline/detect.py \
-  --clips_dir ./data/clips \
-  --store_layout ./data/store_layout.json \
-  --output ./data/events.jsonl
+# Run detection
+python pipeline/detect.py
 
-echo "Done! Events written to data/events.jsonl"
-echo "Event count: $(wc -l < ./data/events.jsonl)"
+echo ""
+echo "=== Detection complete ==="
+echo "Events saved to data/events.jsonl"
+echo ""
+
+# Ingest into API if running
+if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+    echo "=== API detected — ingesting events ==="
+    python scripts/ingest_events.py data/events.jsonl
+    echo "=== Ingest complete ==="
+else
+    echo "API not running — start with 'docker compose up' then run:"
+    echo "  python scripts/ingest_events.py data/events.jsonl"
+fi
+
+echo "Done at $(date)"
