@@ -63,3 +63,22 @@ SQLite for this submission. Reasons:
 **What I would change for production**: At 40 live stores sending events in real time, SQLite's single-writer lock becomes a bottleneck. Would switch to PostgreSQL with connection pooling (asyncpg) and add a Redis layer for real-time queue depth metrics. The API code requires minimal changes — only `database.py` needs updating since all queries use standard SQL.
 
 **Where I disagreed with AI**: Claude suggested adding PostgreSQL now "for production-readiness points." Disagreed — a broken two-service docker-compose that fails the acceptance gate scores zero. A working single-service SQLite submission scores more than a broken PostgreSQL one.
+
+---
+
+## Decision 4 — Dashboard Interface: Terminal vs Browser
+
+### Options Considered
+- **Terminal dashboard** using `rich` (`dashboard.py`)
+- **Streamlit browser dashboard** using `streamlit_dashboard.py`
+- **React/SPA frontend** with a separate web app
+
+### What I Chose and Why
+Chose to include both the terminal dashboard and the Streamlit dashboard. The terminal dashboard is lightweight and fast for developers, while the Streamlit app provides a browser-based UI that is easier for reviewers and non-technical stakeholders.
+
+### Why not React
+React would require a separate build pipeline, more dependencies, and more time to wire up. Streamlit gives a simple, single-file browser dashboard with minimal additional overhead.
+
+### Practical tradeoff
+- Terminal dashboard: no extra install beyond `rich` and `requests`.
+- Browser dashboard: requires `streamlit`, but gives a more accessible review experience and richer visual layout.

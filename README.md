@@ -6,14 +6,51 @@ End-to-end retail analytics pipeline — from raw CCTV footage to a live store m
 
 Processes CCTV clips from physical retail stores, detects and tracks visitors, emits structured behavioural events, and exposes a REST API for real-time analytics including conversion rate, zone heatmaps, funnel analysis, and anomaly detection.
 
-## Quick Start (5 commands)
+## Instructions to Run
+
+1. Clone the repository and enter the project folder:
 
 ```bash
 git clone https://github.com/jainlavanya14/store-intelligence.git
 cd store-intelligence
+```
+
+2. Start the application with Docker Compose:
+
+```bash
 docker compose up --build
+```
+
+This starts the FastAPI app on `http://localhost:8000` and mounts the SQLite database in the container.
+
+3. In a second terminal, ingest events into the service:
+
+```bash
 python scripts/ingest_events.py data/events.jsonl
+```
+
+4. Verify the API is running:
+
+```bash
+curl http://localhost:8000/health
+```
+
+5. Query store metrics:
+
+```bash
 curl http://localhost:8000/stores/store_1076/metrics
+```
+
+6. Run the Streamlit browser dashboard:
+
+```bash
+py -3.11 -m streamlit run streamlit_dashboard.py
+```
+
+If `streamlit` is not installed yet, install it with:
+
+```bash
+py -3.11 -m pip install streamlit
 ```
 
 ## Project Structure
@@ -111,6 +148,7 @@ python scripts/ingest_events.py data/sample_events.jsonl
 - **Storage**: SQLite (mounted as Docker volume)
 - **Validation**: Pydantic v2
 - **Tests**: pytest + httpx
+- **Dashboard**: terminal dashboard + Streamlit browser dashboard
 - **Container**: Docker + docker-compose
 
 ## Store IDs

@@ -8,7 +8,7 @@ Store Intelligence is an end-to-end retail analytics pipeline that processes raw
 
 CCTV Clips → Detection Pipeline → events.jsonl → POST /events/ingest → SQLite → REST API
 
-The system has four layers:
+The system has five layers:
 
 **1. Detection Layer** (`pipeline/`)
 YOLOv8n detects people in each frame. ByteTrack assigns persistent track IDs across frames. A custom `VisitorTracker` maps track IDs to visitor session tokens and handles re-entry detection via position similarity. Events are emitted in three schemas: entry/exit, zone, and queue.
@@ -19,7 +19,10 @@ Structured JSONL file with three event types matching the sample schema provided
 **3. Intelligence API** (`app/`)
 FastAPI application with SQLite storage. Three tables map to the three event types. All endpoints handle both `store_1076` and `ST1076` ID formats. Idempotent ingest via primary key constraints. Structured JSON logging on every request.
 
-**4. Storage**
+**4. Browser Dashboard** (`streamlit_dashboard.py`)
+A Streamlit frontend that queries the API and renders interactive store metrics, funnel tables, heatmaps, anomalies, and store health in the browser. This provides a reviewer-friendly UI alternative to the terminal dashboard.
+
+**5. Storage**
 SQLite chosen for simplicity and zero-dependency deployment. The DB file is mounted as a Docker volume so data persists across container restarts. For production scale (40 stores), PostgreSQL would replace SQLite with connection pooling.
 
 ## Edge Cases Handled
