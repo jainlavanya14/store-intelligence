@@ -1,62 +1,35 @@
 {
-  "STORE_BLR_001": {
-    "store_id": "STORE_BLR_001",
-    "store_name": "Brigade_Bangalore",
-    "city": "Bangalore",
-    "open_hours": {
-      "open": "10:00",
-      "close": "21:00"
-    },
+  "STORE_1": {
+    "store_id": "STORE_1",
+    "store_code": "store_1076",
+    "store_name": "Store 1",
+    "open_hours": {"open": "10:00", "close": "22:00"},
     "cameras": {
-      "CAM_ENTRY_01": {
-        "type": "entry",
-        "file": "CAM 1.mp4"
-      },
-      "CAM_FLOOR_01": {
-        "type": "floor",
-        "file": "CAM 2.mp4"
-      },
-      "CAM_FLOOR_02": {
-        "type": "floor",
-        "file": "CAM 3.mp4"
-      },
-      "CAM_BILLING_01": {
-        "type": "billing",
-        "file": "CAM 4.mp4"
-      },
-      "CAM_BILLING_02": {
-        "type": "billing",
-        "file": "CAM 5.mp4"
-      }
+      "CAM1": {"type": "zone",    "file": "CAM 1 - zone.mp4"},
+      "CAM2": {"type": "zone",    "file": "CAM 2 - zone.mp4"},
+      "CAM3": {"type": "entry",   "file": "CAM 3 - entry.mp4"},
+      "CAM5": {"type": "billing", "file": "CAM 5 - billing.mp4"}
     },
     "zones": [
-      {
-        "zone_id": "ENTRY",
-        "camera": "CAM_ENTRY_01"
-      },
-      {
-        "zone_id": "BATH_BODY",
-        "camera": "CAM_FLOOR_01",
-        "sub_category": "bath-and-body"
-      },
-      {
-        "zone_id": "SKINCARE",
-        "camera": "CAM_FLOOR_01",
-        "sub_category": "skin"
-      },
-      {
-        "zone_id": "MAKEUP",
-        "camera": "CAM_FLOOR_02",
-        "sub_category": "makeup"
-      },
-      {
-        "zone_id": "BILLING",
-        "camera": "CAM_BILLING_01"
-      },
-      {
-        "zone_id": "BILLING_2",
-        "camera": "CAM_BILLING_02"
-      }
+      {"zone_id": "STORE_1_Z01", "zone_name": "Zone CAM1", "camera": "CAM1", "zone_type": "SHELF"},
+      {"zone_id": "STORE_1_Z02", "zone_name": "Zone CAM2", "camera": "CAM2", "zone_type": "SHELF"},
+      {"zone_id": "STORE_1_BILLING", "zone_name": "Billing Counter", "camera": "CAM5", "zone_type": "BILLING"}
+    ]
+  },
+  "STORE_2": {
+    "store_id": "STORE_2",
+    "store_code": "store_1077",
+    "store_name": "Store 2",
+    "open_hours": {"open": "10:00", "close": "22:00"},
+    "cameras": {
+      "CAM1": {"type": "entry",   "file": "entry 1.mp4"},
+      "CAM2": {"type": "entry",   "file": "entry 2.mp4"},
+      "CAM3": {"type": "zone",    "file": "zone.mp4"},
+      "CAM4": {"type": "billing", "file": "billing_area.mp4"}
+    },
+    "zones": [
+      {"zone_id": "STORE_2_Z01", "zone_name": "Main Zone", "camera": "CAM3", "zone_type": "SHELF"},
+      {"zone_id": "STORE_2_BILLING", "zone_name": "Billing Area", "camera": "CAM4", "zone_type": "BILLING"}
     ]
   }
 }
