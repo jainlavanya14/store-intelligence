@@ -1,21 +1,21 @@
 from .database import get_conn
 
 def get_metrics(store_id: str):
-    # Handle both formats: store_1076 → ST1076
     store_alt = "ST" + store_id.split("_")[-1]
 
     with get_conn() as conn:
+        # Check both store_code and store_id formats for entry events
         unique_visitors = conn.execute("""
             SELECT COUNT(DISTINCT id_token) FROM entry_exit_events
-            WHERE store_code=? AND event_type='entry' AND is_staff=0
-        """, (store_id,)).fetchone()[0]
+            WHERE (store_code=? OR store_code=?) AND event_type='entry' AND is_staff=0
+        """, (store_id, store_alt)).fetchone()[0]
 
         billing_visitors = conn.execute("""
             SELECT COUNT(DISTINCT track_id) FROM queue_events
             WHERE store_id=? OR store_id=?
         """, (store_id, store_alt)).fetchone()[0]
 
-        conversion_rate = round(billing_visitors / unique_visitors, 3) if unique_visitors else 0.0
+        conversion_rate = round(min(billing_visitors / unique_visitors, 1.0), 3) if unique_visitors else 0.0
 
         zone_dwell = conn.execute("""
             SELECT zone_name, COUNT(*) as visits

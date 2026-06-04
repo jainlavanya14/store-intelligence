@@ -24,8 +24,10 @@ def get_funnel(store_id: str):
             WHERE (store_id=? OR store_id=?) AND abandoned=0
         """, (store_id, store_alt)).fetchone()[0]
 
-        def drop(a, b):
-            return round((a - b) / a * 100, 1) if a else 0.0
+       def drop(a, b):
+    if not a or b > a:
+        return 0.0
+    return round((a - b) / a * 100, 1)
 
         return {
             "store_id": store_id,
