@@ -6,8 +6,8 @@ def get_funnel(store_id: str):
     with get_conn() as conn:
         entries = conn.execute("""
             SELECT COUNT(DISTINCT id_token) FROM entry_exit_events
-            WHERE store_code=? AND event_type='entry' AND is_staff=0
-        """, (store_id,)).fetchone()[0]
+            WHERE (store_code=? OR store_code=?) AND event_type='entry' AND is_staff=0
+        """, (store_id, store_alt)).fetchone()[0]
 
         zone_visits = conn.execute("""
             SELECT COUNT(DISTINCT track_id) FROM zone_events
@@ -24,10 +24,10 @@ def get_funnel(store_id: str):
             WHERE (store_id=? OR store_id=?) AND abandoned=0
         """, (store_id, store_alt)).fetchone()[0]
 
-       def drop(a, b):
-    if not a or b > a:
-        return 0.0
-    return round((a - b) / a * 100, 1)
+        def drop(a, b):
+            if not a or b > a:
+                return 0.0
+            return round((a - b) / a * 100, 1)
 
         return {
             "store_id": store_id,
